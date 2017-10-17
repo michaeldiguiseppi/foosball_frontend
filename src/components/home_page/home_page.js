@@ -13,11 +13,17 @@ class HomePage extends Component {
         p2_score: 0,
         win_by_amount: 0,
       },
+      comparePlayers: {
+        p1_id: 0,
+        p2_id: 0,
+      },
+      scores: [],
     }
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleCompareChange = this.handleCompareChange.bind(this);
     this._handleSubmit = this._handleSubmit.bind(this);
-
+    this._getScores = this._getScores.bind(this);
   }
 
   componentDidMount() {
@@ -89,41 +95,79 @@ class HomePage extends Component {
         });
       }
     }
+  }
+
+  handleCompareChange(event) {
+    const target = event.target;
+    const value = target.value;
+    const name = target.name;
 
     this.setState({
-      newScore: {
-        ...this.state.newScore,
+      comparePlayers: {
+        ...this.state.comparePlayers,
         [name]: +value,
       }
     });
   }
 
+  _renderScores() {
+    return this.state.scores.map((score) => {
+      return (
+        <tr key={ score.p1_name + score.id }>
+          <td>{ score.p1_name }</td>
+          <td>{ score.p1_score }</td>
+          <td>{ score.p2_score }</td>
+          <td>{ score.p2_name }</td>
+        </tr>
+      )
+    });
+  }
+
+  _getScores(event) {
+    event.preventDefault()
+    return fetch("http://localhost:9002/v1/scores", {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(this.state.comparePlayers)})
+    .then((response) => response.json())
+    .then((responseJson) => {
+        this.setState({
+          scores: responseJson.scores
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   render() {
     return (
-      <div>
+      <div className="container">
+        <h3>Add Scores</h3>
+        <hr />
         <form className="form-horizontal" onSubmit={ this._handleSubmit }>
           <fieldset>
             <div className="form-group">
-              <div className="col-lg-3 col-lg-offset-3 col-sm-3 col-sm-offset-3">
+              <div className="col-lg-3 col-sm-3">
                 <select className="form-control text-center" id="select" name="p1_id" value={ this.state.newScore.p1_id } onChange={ this.handleInputChange }>
                   <option value="0"> -- Select a Player -- </option>
                   { this._renderUsers() }
                 </select>
               </div>
               <div className="col-lg-3 col-sm-3">
-                <select className="form-control text-center" id="select" name="p2_id" value={ this.state.newScore.p2_id } onChange={ this.handleInputChange }>
-                  <option value="0"> -- Select a Player -- </option>
-                  { this._renderUsers() }
-                </select>
-              </div>
-            </div>
-            <div className="form-group">
-              <div className="col-lg-3 col-lg-offset-3 col-sm-3 col-sm-offset-3">
                 <input type="text" className="form-control text-center" name="p1_score" placeholder="Score" value={ this.state.newScore.p1_score } onChange={ this.handleInputChange }/>
               </div>
               <div className="col-lg-3 col-sm-3">
                 <input type="text" className="form-control text-center" name="p2_score" placeholder="Score" value={ this.state.newScore.p2_score } onChange={ this.handleInputChange }/>
+              </div>
+              <div className="col-lg-3 col-sm-3">
+                <select className="form-control text-center" id="select" name="p2_id" value={ this.state.newScore.p2_id } onChange={ this.handleInputChange }>
+                  <option value="0"> -- Select a Player -- </option>
+                  { this._renderUsers() }
+                </select>
               </div>
             </div>
             <div className="form-group">
@@ -134,6 +178,47 @@ class HomePage extends Component {
             </div>
           </fieldset>
         </form>
+        <hr />
+        <h3>Matchup Stats</h3>
+        <hr />
+        <form className="form-horizontal" onSubmit={ this._getScores }>
+          <fieldset>
+            <div className="form-group">
+              <div className="col-lg-3 col-sm-3 col-lg-offset-3 col-sm-offset-3">
+                <select className="form-control text-center" id="select" name="p1_id" value={ this.state.comparePlayers.p1_id } onChange={ this.handleCompareChange }>
+                  <option value="0"> -- Select a Player -- </option>
+                  { this._renderUsers() }
+                </select>
+              </div>
+              <div className="col-lg-3 col-sm-3">
+                <select className="form-control text-center" id="select" name="p2_id" value={ this.state.comparePlayers.p2_id } onChange={ this.handleCompareChange }>
+                  <option value="0"> -- Select a Player -- </option>
+                  { this._renderUsers() }
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4">
+                <button type="reset" className="btn btn-default">Cancel</button>
+                <button type="submit" className="btn btn-primary">Submit</button>
+              </div>
+            </div>
+          </fieldset>
+        </form>
+        <hr />
+        <table className="table table-striped table-hover text-center">
+          <thead>
+            <tr>
+              <th className="text-center">Player 1 Name</th>
+              <th className="text-center">Player 1 Score</th>
+              <th className="text-center">Player 2 Score</th>
+              <th className="text-center">Player 2 Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            { this._renderScores() }
+          </tbody>
+        </table>
       </div>
     );
   }

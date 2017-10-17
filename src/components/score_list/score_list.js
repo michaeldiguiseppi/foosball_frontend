@@ -42,9 +42,9 @@ class ScoreList extends Component {
   render() {
     console.log(this.state.scores);
     return (
-      <div className="ScoreList">
+      <div className="ScoreList container">
         <header className="ScoreList-header">
-          <h1 className="ScoreList-title">Foosball Tracker</h1>
+          <h1 className="ScoreList-title text-center">All Scores</h1>
         </header>
         <table className="table table-striped table-hover text-center">
           <thead>
