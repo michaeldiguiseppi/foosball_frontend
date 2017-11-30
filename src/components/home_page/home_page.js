@@ -19,10 +19,8 @@ class HomePage extends Component {
       },
       scores: [],
     }
-
-    this.handleInputChange = this.handleInputChange.bind(this);
     this.handleCompareChange = this.handleCompareChange.bind(this);
-    this._handleSubmit = this._handleSubmit.bind(this);
+    this._handleScoreSubmit = this._handleScoreSubmit.bind(this);
     this._getScores = this._getScores.bind(this);
   }
 
@@ -51,52 +49,48 @@ class HomePage extends Component {
     });
   }
 
-  _handleSubmit(event) {
+  _handleScoreSubmit(event) {
     event.preventDefault();
 
-    console.log(this.state.newScore);
-    return fetch('https://localhost:9002/v1/scores/add', {
+    let newScore = {
+        p1_id: this.refs.p1_id.value,
+        p2_id: this.refs.p2_id.value,
+        p1_score: this.refs.p1_score.value,
+        p2_score: this.refs.p2_score.value,
+    }
+
+    if (!newScore.win_by_amount && (newScore.p1_score && newScore.p2_score)) {
+      let p1_score = newScore.p1_score;
+      let p2_score = newScore.p2_score;
+      let win_by_amount;
+      if (p1_score > p2_score) {
+        win_by_amount = p1_score - p2_score;
+        newScore = {
+            ...newScore,
+            win_by_amount,
+        }
+      } else {
+        win_by_amount = p2_score - p1_score;
+        newScore = {
+            ...newScore,
+            win_by_amount,
+        }
+      }
+    }
+
+    return fetch('http://localhost:9002/v1/scores/add', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(this.state.newScore)
+      body: JSON.stringify(newScore)
     })
     .then((response) => {
       console.log(response);
     })
   }
-
-  handleInputChange(event) {
-    const target = event.target;
-    const value = target.value;
-    const name = target.name;
-    let win_by_amount;
-
-    if (!this.state.newScore.win_by_amount && (this.state.newScore.p1_score && this.state.newScore.p2_score)) {
-      let p1_score = this.state.newScore.p1_score;
-      let p2_score = this.state.newScore.p2_score;
-      if (p1_score > p2_score) {
-        win_by_amount = p1_score - p2_score;
-        this.setState({
-          newScore: {
-            ...this.state.newScore,
-            win_by_amount,
-          }
-        });
-      } else {
-        win_by_amount = p2_score - p1_score;
-        this.setState({
-          newScore: {
-            ...this.state.newScore,
-            win_by_amount,
-          }
-        });
-      }
-    }
-  }
-
+  
   handleCompareChange(event) {
     const target = event.target;
     const value = target.value;
@@ -134,9 +128,13 @@ class HomePage extends Component {
       body: JSON.stringify(this.state.comparePlayers)})
     .then((response) => response.json())
     .then((responseJson) => {
+      if (responseJson.scores.length) {
         this.setState({
           scores: responseJson.scores
         });
+      } else {
+        return <h1>{ responseJson.message }</h1>
+      }
       })
       .catch((error) => {
         console.error(error);
@@ -148,24 +146,24 @@ class HomePage extends Component {
       <div className="container">
         <h3>Add Scores</h3>
         <hr />
-        <form className="form-horizontal" onSubmit={ this._handleSubmit }>
+        <form className="form-horizontal" onSubmit={ this._handleScoreSubmit }>
           <fieldset>
             <div className="form-group">
               <div className="col-lg-3 col-sm-3">
-                <select className="form-control text-center" id="select" name="p1_id" value={ this.state.newScore.p1_id } onChange={ this.handleInputChange }>
-                  <option value="0"> -- Select a Player -- </option>
+                <select className="form-control text-center" id="select" name="p1_id" ref="p1_id">
+                  <option value="0" className="text-center"> -- Select Black Side -- </option>
                   { this._renderUsers() }
                 </select>
               </div>
               <div className="col-lg-3 col-sm-3">
-                <input type="text" className="form-control text-center" name="p1_score" placeholder="Score" value={ this.state.newScore.p1_score } onChange={ this.handleInputChange }/>
+                <input type="text" className="form-control text-center" name="p1_score" placeholder="Score" ref="p1_score"/>
               </div>
               <div className="col-lg-3 col-sm-3">
-                <input type="text" className="form-control text-center" name="p2_score" placeholder="Score" value={ this.state.newScore.p2_score } onChange={ this.handleInputChange }/>
+                <input type="text" className="form-control text-center" name="p2_score" placeholder="Score" ref="p2_score"/>
               </div>
               <div className="col-lg-3 col-sm-3">
-                <select className="form-control text-center" id="select" name="p2_id" value={ this.state.newScore.p2_id } onChange={ this.handleInputChange }>
-                  <option value="0"> -- Select a Player -- </option>
+                <select className="form-control text-center" id="select" name="p2_id" ref="p2_id">
+                  <option value="0" className="text-center"> -- Select White Side -- </option>
                   { this._renderUsers() }
                 </select>
               </div>
