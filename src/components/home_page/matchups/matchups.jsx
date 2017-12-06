@@ -4,6 +4,7 @@ import Statistics from './statistics';
 class Matchups extends Component {
   constructor(props) {
     super(props);
+	let baseUrl = "https://superior-foos-api.herokuapp.com"
 
     this.state = {
       users: [],
@@ -12,7 +13,8 @@ class Matchups extends Component {
         p2_id: 0,
       },
 	  scores: [],
-	  message: {}
+	  message: {},
+	  baseUrl: baseUrl,
     }
     this.handleCompareChange = this.handleCompareChange.bind(this);
 	this._getScores = this._getScores.bind(this);
@@ -24,7 +26,7 @@ class Matchups extends Component {
   }
 
   _getUsers() {
-    return fetch('http://localhost:9002/v1/users')
+    return fetch(this.state.baseUrl + '/v1/users')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -73,7 +75,7 @@ class Matchups extends Component {
       }
     }
 
-    return fetch('http://localhost:9002/v1/scores/add', {
+    return fetch(this.state.baseUrl + '/v1/scores/add', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -128,7 +130,7 @@ class Matchups extends Component {
 	if (this.state.comparePlayers.p1_id === 0 || this.state.comparePlayers.p2_id === 0) {
 		return;
 	}
-    return fetch("http://localhost:9002/v1/scores", {
+    return fetch(this.state.baseUrl + "/v1/scores", {
       method: 'POST',
       headers: {
         'Accept': 'application/json',

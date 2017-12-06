@@ -3,9 +3,11 @@ import React, { Component } from 'react';
 class ScoreList extends Component {
   constructor(props) {
     super(props);
-
+    let baseUrl = "https://superior-foos-api.herokuapp.com"
+    
     this.state = {
       scores: [],
+      baseUrl: baseUrl,
     }
   }
 
@@ -14,7 +16,7 @@ class ScoreList extends Component {
   }
 
   _getScores() {
-    return fetch("http://localhost:9002/v1/scores")
+    return fetch(this.state.baseUrl + "/v1/scores")
     .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -27,16 +29,27 @@ class ScoreList extends Component {
   }
 
   _renderScores() {
-    return this.state.scores.map((score) => {
+    if (this.state.scores && this.state.scores.length) {
+      return this.state.scores.map((score) => {
+        return (
+          <tr key={ score.p1_name + score.id }>
+            <td>{ score.p1_name }</td>
+            <td>{ score.p1_score }</td>
+            <td>{ score.p2_score }</td>
+            <td>{ score.p2_name }</td>
+          </tr>
+        )
+      });
+    } else {
       return (
-        <tr key={ score.p1_name + score.id }>
-          <td>{ score.p1_name }</td>
-          <td>{ score.p1_score }</td>
-          <td>{ score.p2_score }</td>
-          <td>{ score.p2_name }</td>
+        <tr>
+          <td></td>
+          <td>No Scores Available</td>
+          <td>No Scores Available</td>
+          <td></td>
         </tr>
-      )
-    });
+        )
+    }
   }
 
   render() {

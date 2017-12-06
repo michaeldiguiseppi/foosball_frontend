@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 class AddScore extends Component {
   constructor(props) {
     super(props);
+    let baseUrl = "https://superior-foos-api.herokuapp.com"
 
     this.state = {
       users: [],
@@ -14,6 +15,7 @@ class AddScore extends Component {
         win_by_amount: 0,
       },
       scores: [],
+      baseUrl: baseUrl,
     }
     this._handleScoreSubmit = this._handleScoreSubmit.bind(this);
     this._getScores = this._getScores.bind(this);
@@ -24,7 +26,7 @@ class AddScore extends Component {
   }
 
   _getUsers() {
-    return fetch('http://localhost:9002/v1/users')
+    return fetch(this.state.baseUrl + '/v1/users')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -73,7 +75,7 @@ class AddScore extends Component {
       }
     }
 
-    return fetch('http://localhost:9002/v1/scores/add', {
+    return fetch(this.state.baseUrl + '/v1/scores/add', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -82,7 +84,7 @@ class AddScore extends Component {
       body: JSON.stringify(newScore)
     })
     .then((response) => {
-      console.log(response);
+      document.getElementById("score_form").reset();
     })
   }
 
@@ -101,7 +103,7 @@ class AddScore extends Component {
 
   _getScores(event) {
     event.preventDefault()
-    return fetch("http://localhost:9002/v1/scores", {
+    return fetch(this.state.baseUrl + "/v1/scores", {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -128,7 +130,7 @@ class AddScore extends Component {
       <div className="container">
         <h3>Add Scores</h3>
         <hr />
-        <form className="form-horizontal" onSubmit={ this._handleScoreSubmit }>
+        <form className="form-horizontal" id="score_form" onSubmit={ this._handleScoreSubmit }>
           <fieldset>
             <div className="form-group">
               <div className="col-lg-3 col-sm-3">

@@ -5,8 +5,11 @@ class AddPlayers extends Component {
   constructor(props) {
 	super(props);
 
+	let baseUrl = "https://superior-foos-api.herokuapp.com"
+
     this.state = {
 	  players: [],
+	  baseUrl: baseUrl,
 	}
 	
 	this._handleSubmit = this._handleSubmit.bind(this);
@@ -17,7 +20,7 @@ class AddPlayers extends Component {
   }
 
   _getPlayers() {
-	return fetch('http://localhost:9002/v1/users')
+	return fetch(this.state.baseUrl + '/v1/users')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -54,7 +57,7 @@ class AddPlayers extends Component {
 	console.log(newPlayer);
 
 
-	return fetch('http://localhost:9002/v1/users', {
+	return fetch(this.state.baseUrl + '/v1/users', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',
