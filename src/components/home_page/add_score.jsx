@@ -137,19 +137,19 @@ class AddScore extends Component {
             <div className="form-group">
               <div className="col-lg-3 col-sm-3">
                 <select className="form-control text-center" id="select" name="p1_id" ref="p1_id">
-                  <option value="0" className="text-center"> -- Select Player -- </option>
+                  <option value="0" className="text-center"> -- Select Player 1 -- </option>
                   { this._renderUsers() }
                 </select>
               </div>
               <div className="col-lg-3 col-sm-3">
-                <input type="text" className="form-control text-center" name="p1_score" placeholder="Score" ref="p1_score"/>
+                <input type="number" pattern="[0-9]*" className="form-control text-center" name="p1_score" placeholder="Player 1 Score" ref="p1_score" autoComplete="off"/>
               </div>
               <div className="col-lg-3 col-sm-3">
-                <input type="text" className="form-control text-center" name="p2_score" placeholder="Score" ref="p2_score"/>
+                <input type="number" pattern="[0-9]*" className="form-control text-center" name="p2_score" placeholder="Player 2 Score" ref="p2_score" autoComplete="off"/>
               </div>
               <div className="col-lg-3 col-sm-3">
                 <select className="form-control text-center" id="select" name="p2_id" ref="p2_id">
-                  <option value="0" className="text-center"> -- Select Player -- </option>
+                  <option value="0" className="text-center"> -- Select Player 2 -- </option>
                   { this._renderUsers() }
                 </select>
               </div>
