@@ -5,11 +5,13 @@ class AddPlayers extends Component {
   constructor(props) {
 	super(props);
 
-	let baseUrl = "https://superior-foos-api.herokuapp.com"
+	let baseUrl = "https://superior-foos-api.herokuapp.com";
+	let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
 
     this.state = {
 	  players: [],
 	  baseUrl: baseUrl,
+	  proxyUrl: proxyUrl,
 	}
 	
 	this._handleSubmit = this._handleSubmit.bind(this);
@@ -20,7 +22,7 @@ class AddPlayers extends Component {
   }
 
   _getPlayers() {
-	return fetch(this.state.baseUrl + '/v1/users')
+	return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/users')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -57,7 +59,7 @@ class AddPlayers extends Component {
 	console.log(newPlayer);
 
 
-	return fetch(this.state.baseUrl + '/v1/users', {
+	return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/users', {
 		method: 'POST',
 		headers: {
 			'Accept': 'application/json',

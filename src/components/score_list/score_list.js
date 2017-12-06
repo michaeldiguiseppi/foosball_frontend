@@ -3,11 +3,13 @@ import React, { Component } from 'react';
 class ScoreList extends Component {
   constructor(props) {
     super(props);
-    let baseUrl = "https://superior-foos-api.herokuapp.com"
+    let baseUrl = "https://superior-foos-api.herokuapp.com";
+    let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
     
     this.state = {
       scores: [],
       baseUrl: baseUrl,
+      proxyUrl: proxyUrl,
     }
   }
 
@@ -16,7 +18,7 @@ class ScoreList extends Component {
   }
 
   _getScores() {
-    return fetch(this.state.baseUrl + "/v1/scores")
+    return fetch(this.state.proxyUrl + this.state.baseUrl + "/v1/scores")
     .then((response) => response.json())
       .then((responseJson) => {
         this.setState({

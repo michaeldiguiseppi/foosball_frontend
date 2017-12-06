@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 class AddScore extends Component {
   constructor(props) {
     super(props);
-    let baseUrl = "https://superior-foos-api.herokuapp.com"
+    let baseUrl = "https://superior-foos-api.herokuapp.com";
+    let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
 
     this.state = {
       users: [],
@@ -16,6 +17,7 @@ class AddScore extends Component {
       },
       scores: [],
       baseUrl: baseUrl,
+      proxyUrl: proxyUrl,
     }
     this._handleScoreSubmit = this._handleScoreSubmit.bind(this);
     this._getScores = this._getScores.bind(this);
@@ -26,7 +28,7 @@ class AddScore extends Component {
   }
 
   _getUsers() {
-    return fetch(this.state.baseUrl + '/v1/users')
+    return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/users')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
@@ -75,7 +77,7 @@ class AddScore extends Component {
       }
     }
 
-    return fetch(this.state.baseUrl + '/v1/scores/add', {
+    return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/scores/add', {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
@@ -103,7 +105,7 @@ class AddScore extends Component {
 
   _getScores(event) {
     event.preventDefault()
-    return fetch(this.state.baseUrl + "/v1/scores", {
+    return fetch(this.state.proxyUrl + this.state.baseUrl + "/v1/scores", {
       method: 'POST',
       headers: {
         'Accept': 'application/json',
