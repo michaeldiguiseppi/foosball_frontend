@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+require('../../index.css');
 
 class AddPlayers extends Component {
   constructor(props) {
@@ -101,7 +102,7 @@ class AddPlayers extends Component {
 			  	<input className="form-control text-center" type="text" placeholder="Last Name" name="last_name" ref="last_name"/>
               </div>
             </div>
-			<div className="col-lg-1 col-sm-1 col-lg-offset-5 col-sm-offset-5"><input className="form-control checkbox-inline" name="is_admin" type="checkbox" ref="is_admin"/><label htmlFor="is_admin">Is Admin</label></div>
+			<div className="col-lg-2 col-sm-2 col-lg-offset-5 col-sm-offset-5"><label htmlFor="is_admin"><input className="aligned-checkbox" name="is_admin" type="checkbox" ref="is_admin"/>Is Admin</label></div>
             <div className="form-group text-center">
               <div className="col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4">
                 <button type="reset" className="btn btn-default">Cancel</button>

@@ -133,7 +133,7 @@ class AddScore extends Component {
             <div className="form-group">
               <div className="col-lg-3 col-sm-3">
                 <select className="form-control text-center" id="select" name="p1_id" ref="p1_id">
-                  <option value="0" className="text-center"> -- Select Black Side -- </option>
+                  <option value="0" className="text-center"> -- Select Player -- </option>
                   { this._renderUsers() }
                 </select>
               </div>
@@ -145,7 +145,7 @@ class AddScore extends Component {
               </div>
               <div className="col-lg-3 col-sm-3">
                 <select className="form-control text-center" id="select" name="p2_id" ref="p2_id">
-                  <option value="0" className="text-center"> -- Select White Side -- </option>
+                  <option value="0" className="text-center"> -- Select Player -- </option>
                   { this._renderUsers() }
                 </select>
               </div>

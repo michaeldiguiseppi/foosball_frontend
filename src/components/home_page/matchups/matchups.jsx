@@ -11,10 +11,12 @@ class Matchups extends Component {
         p1_id: 0,
         p2_id: 0,
       },
-      scores: [],
+	  scores: [],
+	  message: {}
     }
     this.handleCompareChange = this.handleCompareChange.bind(this);
-    this._getScores = this._getScores.bind(this);
+	this._getScores = this._getScores.bind(this);
+	this._resetScores = this._resetScores.bind(this);
   }
 
   componentDidMount() {
@@ -98,20 +100,34 @@ class Matchups extends Component {
   }
 
   _renderScores() {
-    return this.state.scores.map((score) => {
-      return (
-        <tr key={ score.p1_name + score.id }>
-          <td>{ score.p1_name }</td>
-          <td>{ score.p1_score }</td>
-          <td>{ score.p2_score }</td>
-          <td>{ score.p2_name }</td>
-        </tr>
-      )
-    });
+	  if (this.state.scores.length) {
+		return this.state.scores.map((score) => {
+			return (
+				<tr key={ score.p1_name + score.id }>
+					<td>{ score.p1_name }</td>
+					<td>{ score.p1_score }</td>
+					<td>{ score.p2_score }</td>
+					<td>{ score.p2_name }</td>
+				</tr>
+			)
+			});
+	  } else {
+		  return (
+		  <tr>
+			  <td></td>
+			  <td>No Scores Available</td>
+			  <td>No Scores Available</td>
+			  <td></td>
+		  </tr>
+		  )
+	  }
   }
 
   _getScores(event) {
-    event.preventDefault()
+	event.preventDefault()
+	if (this.state.comparePlayers.p1_id === 0 || this.state.comparePlayers.p2_id === 0) {
+		return;
+	}
     return fetch("http://localhost:9002/v1/scores", {
       method: 'POST',
       headers: {
@@ -121,17 +137,30 @@ class Matchups extends Component {
       body: JSON.stringify(this.state.comparePlayers)})
     .then((response) => response.json())
     .then((responseJson) => {
-      if (responseJson.scores.length) {
+      if (responseJson.scores && responseJson.scores.length) {
         this.setState({
           scores: responseJson.scores
         });
       } else {
-        return <h1>{ responseJson.message }</h1>
+        this.setState({
+			scores: [],
+			message: responseJson.message
+		});
       }
       })
       .catch((error) => {
         console.error(error);
       });
+  }
+
+  _resetScores() {
+	this.setState({
+			scores: [],
+			comparePlayers: {
+				p1_id: 0,
+				p2_id: 0,
+			},
+		});
   }
 
   render() {
@@ -143,13 +172,13 @@ class Matchups extends Component {
           <fieldset>
             <div className="form-group">
               <div className="col-lg-3 col-sm-3 col-lg-offset-3 col-sm-offset-3">
-                <select className="form-control text-center" id="select" name="p1_id" value={ this.state.comparePlayers.p1_id } onChange={ this.handleCompareChange }>
+                <select className="form-control text-center" id="select" required name="p1_id" value={ this.state.comparePlayers.p1_id } onChange={ this.handleCompareChange }>
                   <option value="0"> -- Select a Player -- </option>
                   { this._renderUsers() }
                 </select>
               </div>
               <div className="col-lg-3 col-sm-3">
-                <select className="form-control text-center" id="select" name="p2_id" value={ this.state.comparePlayers.p2_id } onChange={ this.handleCompareChange }>
+                <select className="form-control text-center" id="select" required name="p2_id" value={ this.state.comparePlayers.p2_id } onChange={ this.handleCompareChange }>
                   <option value="0"> -- Select a Player -- </option>
                   { this._renderUsers() }
                 </select>
@@ -157,7 +186,7 @@ class Matchups extends Component {
             </div>
             <div className="form-group">
               <div className="col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4">
-                <button type="reset" className="btn btn-default">Cancel</button>
+                <button type="reset" className="btn btn-default" onClick={ this._resetScores }>Cancel</button>
                 <button type="submit" className="btn btn-primary">Submit</button>
               </div>
             </div>
@@ -168,7 +197,7 @@ class Matchups extends Component {
 			scores={ this.state.scores }
 			playerOne={ this.state.scores[0].p1_name || "" }
 			playerTwo={ this.state.scores[0].p2_name || "" }
-		/> : <div></div> }
+		/> : <div>No Statistics Available</div> }
 		<hr />
         <table className="table table-striped table-hover text-center">
           <thead>
