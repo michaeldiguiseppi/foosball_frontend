@@ -101,10 +101,10 @@ class AddPlayers extends Component {
           <fieldset>
             <div className="form-group text-center">
               <div className="col-lg-3 col-sm-3 col-lg-offset-3 col-sm-offset-3">
-				<input className="form-control text-center" type="text" placeholder="First Name" name="first_name" ref="first_name"/>
+				<input className="form-control text-center" type="text" placeholder="First Name" name="first_name" ref="first_name" autoComplete="off"/>
               </div>
               <div className="col-lg-3 col-sm-3">
-			  	<input className="form-control text-center" type="text" placeholder="Last Name" name="last_name" ref="last_name"/>
+			  	<input className="form-control text-center" type="text" placeholder="Last Name" name="last_name" ref="last_name" autoComplete="off"/>
               </div>
             </div>
 			<div className="col-lg-2 col-sm-2 col-lg-offset-5 col-sm-offset-5"><label htmlFor="is_admin"><input className="aligned-checkbox" name="is_admin" type="checkbox" ref="is_admin"/>Is Admin</label></div>
