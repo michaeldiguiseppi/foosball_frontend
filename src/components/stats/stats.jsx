@@ -18,9 +18,22 @@ class Stats extends Component {
 		this.calculateTotalPointsFor = this.calculateTotalPointsFor.bind(this);
 		this.calculateTotalPointsAgainst = this.calculateTotalPointsAgainst.bind(this);
 		this.calculateTotalWins = this.calculateTotalWins.bind(this);
+		this.refreshScores = this.refreshScores.bind(this);
 	}
 
 	componentDidMount() {
+		this._getPlayers();
+		this._getScores().then(() => {
+			this.calculateStats();
+		});
+	}
+
+	refreshScores() {
+		this.setState({
+			massStats: [],
+			players: [],
+			scores: []
+		});
 		this._getPlayers();
 		this._getScores().then(() => {
 			this.calculateStats();
@@ -170,6 +183,9 @@ class Stats extends Component {
 	render() {
 		return (
 		<div>
+			<div>
+				<button className="btn btn-small btn-primary" onClick={ this.refreshScores }>Refresh Stats</button>
+			</div>
 			<table className="table table-striped table-hover text-center">
 				<thead>
 					<tr>
