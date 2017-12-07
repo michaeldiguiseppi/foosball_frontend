@@ -54,14 +54,15 @@ class Stats extends Component {
 	}
 
 	calculateWinPercentage(player) {
-		let totalWins = 0;
 		let winPercent = 0;
-		let playerScores = this.state.scores.filter((score) => {
-			return ((score.p1_name === player && score.p1_score === 10) || (score.p2_name === player && score.p2_score === 10))
-		});
-		totalWins = playerScores.length;
-		winPercent = ((totalWins / this.state.scores.length) * 100).toFixed(1);
-		return winPercent;
+		let playerGames = this.getPlayerGames(player);
+		let totalWins = this.calculateTotalWins(player);
+		if (playerGames.length === 0) {
+			winPercent = 0;
+		} else {
+			winPercent = ((totalWins / playerGames.length) * 100);
+		}
+		return winPercent.toFixed(1);
 	}
 
 	calculateLoseBy(player) {
