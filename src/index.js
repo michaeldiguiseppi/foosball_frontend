@@ -6,6 +6,7 @@ import App from './App';
 import ScoreList from './components/score_list/score_list';
 import registerServiceWorker from './registerServiceWorker';
 import AddPlayers from './components/add_players/add_players';
+import Stats from './components/stats/stats';
 
 const PrimaryLayout = () => {
   return (
@@ -25,6 +26,7 @@ const PrimaryLayout = () => {
           <ul className="nav navbar-nav">
             <li><Link to="/scores/all">All Scores</Link></li>
             <li><Link to="/players/add">Add Players</Link></li>
+            <li><Link to="/stats">Stats</Link></li>
           </ul>
           <ul className="nav navbar-nav navbar-right">
           </ul>
@@ -42,6 +44,7 @@ ReactDOM.render(
       <Route exact path="/" component={App}/>
       <Route path="/scores/all" component={ScoreList}/>
       <Route path="/players/add" component={AddPlayers}/>
+      <Route path="/stats" component={Stats}/>
     </div>
   </Router>,
   document.getElementById('root'));

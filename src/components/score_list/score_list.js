@@ -3,8 +3,10 @@ import React, { Component } from 'react';
 class ScoreList extends Component {
   constructor(props) {
     super(props);
-    let baseUrl = "https://superior-foos-api.herokuapp.com";
-    let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
+    // let baseUrl = "https://superior-foos-api.herokuapp.com";
+    // let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
+    let baseUrl = process.env.REACT_APP_BASE_URL;
+	  let proxyUrl = process.env.REACT_APP_PROXY_URL;
     
     this.state = {
       scores: [],
