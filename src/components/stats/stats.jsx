@@ -74,11 +74,12 @@ class Stats extends Component {
 				loseBy += game.p2_score;
 			}
 		});
-		if (playerGames.length === 0) {
+		let playerWins = this.calculateTotalWins(player);
+		if (playerGames.length === 0){
 			return 0;
 		}
-		let playerWins = this.calculateTotalWins(player);
 		loseBy = (loseBy / (playerGames.length - playerWins)).toFixed(2);
+		console.log(loseBy);
 		return loseBy;
 	}
 
