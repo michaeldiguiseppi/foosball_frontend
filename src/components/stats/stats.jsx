@@ -78,8 +78,10 @@ class Stats extends Component {
 		if (playerGames.length === 0){
 			return 0;
 		}
+		if (loseBy === 0) {
+			return "N/A";
+		}
 		loseBy = (loseBy / (playerGames.length - playerWins)).toFixed(2);
-		console.log(loseBy);
 		return loseBy;
 	}
 
