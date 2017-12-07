@@ -77,8 +77,9 @@ class Stats extends Component {
 		if (playerGames.length === 0) {
 			return 0;
 		}
-		loseBy = (loseBy / playerGames.length).toFixed(2);
-		return 10 - loseBy;
+		let playerWins = this.calculateTotalWins(player);
+		loseBy = (loseBy / (playerGames.length - playerWins)).toFixed(2);
+		return loseBy;
 	}
 
 	calculateTotalPointsFor(player) {
