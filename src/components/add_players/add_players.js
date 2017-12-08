@@ -5,8 +5,12 @@ class AddPlayers extends Component {
   constructor(props) {
 	super(props);
 
-	let baseUrl = "https://superior-foos-api.herokuapp.com";
-	let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
+	// let baseUrl = "https://superior-foos-api.herokuapp.com";
+	let baseUrl = process.env.REACT_APP_BASE_URL;
+	let proxyUrl = process.env.REACT_APP_PROXY_URL;
+	// let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
+	
+
 
     this.state = {
 	  players: [],
@@ -101,10 +105,10 @@ class AddPlayers extends Component {
           <fieldset>
             <div className="form-group text-center">
               <div className="col-lg-3 col-sm-3 col-lg-offset-3 col-sm-offset-3">
-				<input className="form-control text-center" type="text" placeholder="First Name" name="first_name" ref="first_name"/>
+				<input className="form-control text-center" type="text" placeholder="First Name" name="first_name" ref="first_name" autoComplete="off"/>
               </div>
               <div className="col-lg-3 col-sm-3">
-			  	<input className="form-control text-center" type="text" placeholder="Last Name" name="last_name" ref="last_name"/>
+			  	<input className="form-control text-center" type="text" placeholder="Last Name" name="last_name" ref="last_name" autoComplete="off"/>
               </div>
             </div>
 			<div className="col-lg-2 col-sm-2 col-lg-offset-5 col-sm-offset-5"><label htmlFor="is_admin"><input className="aligned-checkbox" name="is_admin" type="checkbox" ref="is_admin"/>Is Admin</label></div>
