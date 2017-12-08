@@ -7,7 +7,7 @@ class ScoreList extends Component {
     // let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
     let baseUrl = process.env.REACT_APP_BASE_URL;
 	  let proxyUrl = process.env.REACT_APP_PROXY_URL;
-    
+
     this.state = {
       scores: [],
       baseUrl: baseUrl,
@@ -34,9 +34,11 @@ class ScoreList extends Component {
 
   _renderScores() {
     if (this.state.scores && this.state.scores.length) {
+      let game_number = 0;
       return this.state.scores.map((score) => {
         return (
           <tr key={ score.p1_name + score.id }>
+            <td>{ ++game_number }</td>
             <td>{ score.p1_name }</td>
             <td>{ score.p1_score }</td>
             <td>{ score.p2_score }</td>
@@ -66,6 +68,7 @@ class ScoreList extends Component {
         <table className="table table-striped table-hover text-center">
           <thead>
             <tr>
+              <th className="text-center">Game</th>
               <th className="text-center">Player 1 Name</th>
               <th className="text-center">Player 1 Score</th>
               <th className="text-center">Player 2 Score</th>
