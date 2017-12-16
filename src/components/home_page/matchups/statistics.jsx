@@ -77,14 +77,14 @@ class Statistics extends Component {
 						<td>{ p1_win_percent }%</td>
 						<td>{ p1_total_wins }</td>
 						<td>{ p1_total_points }</td>
-						<td>{ p1_lose_by }</td>
+						<td>{ p1_lose_by > 0 ? p1_lose_by : 'N/A' }</td>
 					</tr>
 					<tr>
 						<td>{ playerTwo }</td>
 						<td>{ p2_win_percent }%</td>
 						<td>{ p2_total_wins }</td>
 						<td>{ p2_total_points }</td>
-						<td>{ p2_lose_by }</td>
+						<td>{ p2_lose_by > 0 ? p2_lose_by : 'N/A' }</td>
 					</tr>
 				</tbody>
 			</table>
@@ -92,7 +92,6 @@ class Statistics extends Component {
 	}
 
 	render() {
-		console.log(this.props);
 		return (<div>
 			{ this.calculateStats() }
 		</div>);

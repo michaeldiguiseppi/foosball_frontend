@@ -1,12 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom'
+import { Provider } from 'react-redux';
 import './index.css';
 import App from './App';
-import ScoreList from './components/score_list/score_list';
+import ScoreListContainer from './containers/scoreListContainer';
+import AddPlayerContainer from './containers/addPlayerContainer';
+import StatsContainer from './containers/statsContainer';
 import registerServiceWorker from './registerServiceWorker';
-import AddPlayers from './components/add_players/add_players';
-import Stats from './components/stats/stats';
+import configureStore from './store/configureStore';
+
+const store = configureStore();
 
 const PrimaryLayout = () => {
   return (
@@ -37,23 +41,16 @@ const PrimaryLayout = () => {
 }
 
 ReactDOM.render(
-  <Router>
-    <div>
-      <PrimaryLayout></PrimaryLayout>
-
-      <Route exact path="/" component={App}/>
-      <Route path="/scores/all" component={ScoreList}/>
-      <Route path="/players/add" component={AddPlayers}/>
-      <Route path="/stats" component={Stats}/>
-    </div>
-  </Router>,
+  <Provider store={ store }>
+    <Router>
+      <div>
+        <PrimaryLayout></PrimaryLayout>
+        <Route exact path="/" component={App}/>
+        <Route path="/scores/all" component={ScoreListContainer}/>
+        <Route path="/players/add" component={AddPlayerContainer}/>
+        <Route path="/stats" component={StatsContainer}/>
+      </div>
+    </Router>
+  </Provider>,
   document.getElementById('root'));
-  // <BrowserRouter>
-  //   <PrimaryLayout>
-  //     <Route exact path="/" component={App}>
-  //       <Route path="/scores/all" component={ScoreList}/>
-  //     </Route>
-  //   </PrimaryLayout>
-  // </BrowserRouter>,
-  // document.getElementById('root'));
 registerServiceWorker();

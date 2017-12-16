@@ -1,41 +1,10 @@
 import React, { Component } from 'react';
 
 class ScoreList extends Component {
-  constructor(props) {
-    super(props);
-    // let baseUrl = "https://superior-foos-api.herokuapp.com";
-    // let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
-    let baseUrl = process.env.REACT_APP_BASE_URL;
-	  let proxyUrl = process.env.REACT_APP_PROXY_URL;
-
-    this.state = {
-      scores: [],
-      baseUrl: baseUrl,
-      proxyUrl: proxyUrl,
-    }
-  }
-
-  componentDidMount() {
-    this._getScores();
-  }
-
-  _getScores() {
-    return fetch(this.state.proxyUrl + this.state.baseUrl + "/v1/scores")
-    .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          scores: responseJson.scores
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
   _renderScores() {
-    if (this.state.scores && this.state.scores.length) {
+    if (this.props.scores && this.props.scores.length) {
       let game_number = 0;
-      return this.state.scores.map((score) => {
+      return this.props.scores.map((score) => {
         return (
           <tr key={ score.p1_name + score.id }>
             <td>{ ++game_number }</td>
@@ -59,7 +28,6 @@ class ScoreList extends Component {
   }
 
   render() {
-    console.log(this.state.scores);
     return (
       <div className="ScoreList container">
         <header className="ScoreList-header">

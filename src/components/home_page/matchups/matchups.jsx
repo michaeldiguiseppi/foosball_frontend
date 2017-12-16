@@ -4,10 +4,6 @@ import Statistics from './statistics';
 class Matchups extends Component {
   constructor(props) {
     super(props);
-	// let baseUrl = "https://superior-foos-api.herokuapp.com";
-	// let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
-	let baseUrl = process.env.REACT_APP_BASE_URL;
-	let proxyUrl = process.env.REACT_APP_PROXY_URL;
 
     this.state = {
       users: [],
@@ -17,33 +13,14 @@ class Matchups extends Component {
       },
 	  scores: [],
 	  message: {},
-	  baseUrl: baseUrl,
-	  proxyUrl: proxyUrl,
     }
     this.handleCompareChange = this.handleCompareChange.bind(this);
-	this._getScores = this._getScores.bind(this);
-	this._resetScores = this._resetScores.bind(this);
-  }
-
-  componentDidMount() {
-    this._getUsers();
-  }
-
-  _getUsers() {
-    return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/users')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          users: responseJson.users,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+	  this._getScores = this._getScores.bind(this);
+	  this._resetScores = this._resetScores.bind(this);
   }
 
   _renderUsers() {
-    return this.state.users.map((user) => {
+    return this.props.users.map((user) => {
       return (
         <option value={ user.id } key={ user.first_name + user.id }>{ user.first_name } { user.last_name }</option>
       )
@@ -79,17 +56,7 @@ class Matchups extends Component {
       }
     }
 
-    return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/scores/add', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newScore)
-    })
-    .then((response) => {
-      console.log(response);
-    })
+    return this.props.addScore(newScore);
   }
   
   handleCompareChange(event) {
@@ -106,8 +73,8 @@ class Matchups extends Component {
   }
 
   _renderScores() {
-	  if (this.state.scores.length) {
-		return this.state.scores.map((score) => {
+	  if (this.props.scores_by_players && this.props.scores_by_players.length) {
+		return this.props.scores_by_players.map((score) => {
 			return (
 				<tr key={ score.p1_name + score.id }>
 					<td>{ score.p1_name }</td>
@@ -130,38 +97,15 @@ class Matchups extends Component {
   }
 
   _getScores(event) {
-	event.preventDefault()
-	if (this.state.comparePlayers.p1_id === 0 || this.state.comparePlayers.p2_id === 0) {
-		return;
-	}
-    return fetch(this.state.proxyUrl + this.state.baseUrl + "/v1/scores", {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(this.state.comparePlayers)})
-    .then((response) => response.json())
-    .then((responseJson) => {
-      if (responseJson.scores && responseJson.scores.length) {
-        this.setState({
-          scores: responseJson.scores
-        });
-      } else {
-        this.setState({
-			scores: [],
-			message: responseJson.message
-		});
-      }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+	  event.preventDefault()
+    if (this.state.comparePlayers.p1_id === 0 || this.state.comparePlayers.p2_id === 0) {
+      return;
+    }
+    return this.props.getScoresByPlayers(this.state.comparePlayers);
   }
 
   _resetScores() {
 	this.setState({
-			scores: [],
 			comparePlayers: {
 				p1_id: 0,
 				p2_id: 0,
@@ -199,10 +143,10 @@ class Matchups extends Component {
           </fieldset>
         </form>
         <hr />
-		{ this.state.scores.length ? <Statistics 
-			scores={ this.state.scores }
-			playerOne={ this.state.scores[0].p1_name || "" }
-			playerTwo={ this.state.scores[0].p2_name || "" }
+		{ this.props.scores_by_players && this.props.scores_by_players.length ? <Statistics 
+			scores={ this.props.scores_by_players }
+			playerOne={ this.props.scores_by_players[0].p1_name || "" }
+			playerTwo={ this.props.scores_by_players[0].p2_name || "" }
 		/> : <div>No Statistics Available</div> }
 		<hr />
         <table className="table table-striped table-hover text-center">

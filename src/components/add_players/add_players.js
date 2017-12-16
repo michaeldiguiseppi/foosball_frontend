@@ -3,80 +3,33 @@ require('../../index.css');
 
 class AddPlayers extends Component {
   constructor(props) {
-	super(props);
-
-	// let baseUrl = "https://superior-foos-api.herokuapp.com";
-	let baseUrl = process.env.REACT_APP_BASE_URL;
-	let proxyUrl = process.env.REACT_APP_PROXY_URL;
-	// let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
-	
-
-
-    this.state = {
-	  players: [],
-	  baseUrl: baseUrl,
-	  proxyUrl: proxyUrl,
-	}
-	
-	this._handleSubmit = this._handleSubmit.bind(this);
-  }
-
-  componentDidMount() {
-    this._getPlayers();
-  }
-
-  _getPlayers() {
-	return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/users')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          players: responseJson.users,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    super(props);
+    this._handleSubmit = this._handleSubmit.bind(this);
   }
 
   _renderPlayers() {
-	return this.state.players.map((player) => {
+	return this.props.users.map((player) => {
 		return (
 		  <tr key={ player.first_name + player.id }>
-			<td>{ player.first_name }</td>
-			<td>{ player.last_name }</td>
-			<td>{ player.is_admin ? "Yes" : "No" }</td>
+        <td>{ player.first_name }</td>
+        <td>{ player.last_name }</td>
+        <td>{ player.is_admin ? "Yes" : "No" }</td>
 		  </tr>
 		)
 	  });
   }
 
-
-
   _handleSubmit(event) {
-	event.preventDefault();
-	let newPlayer = {
-		  first_name: this.refs.first_name.value,
-		  last_name: this.refs.last_name.value,
-		  is_admin: this.refs.is_admin.checked,
-	  }
-
-	console.log(newPlayer);
-
-
-	return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/users', {
-		method: 'POST',
-		headers: {
-			'Accept': 'application/json',
-			'Content-Type': 'application/json',
-		},
-		body: JSON.stringify(newPlayer)
-		})
-		.then((response) => {
-			this._getPlayers();
-			this.refs.first_name.value = '';
-			this.refs.last_name.value = '';
-			this.refs.is_admin.checked = false;
-		});
+    event.preventDefault();
+    let newPlayer = {
+        first_name: this.refs.first_name.value,
+        last_name: this.refs.last_name.value,
+        is_admin: this.refs.is_admin.checked,
+    }
+    return this.props.addPlayer(newPlayer)
+      .then((response) => {
+        document.getElementById("player_form").reset();
+    });
   }
 
 
@@ -101,7 +54,7 @@ class AddPlayers extends Component {
 		<div className="container">
         <h3 className="text-center">Add Players</h3>
         <hr />
-        <form className="form-horizontal" onSubmit={ this._handleSubmit } name="player">
+        <form className="form-horizontal" id="player_form" onSubmit={ this._handleSubmit } name="player">
           <fieldset>
             <div className="form-group text-center">
               <div className="col-lg-3 col-sm-3 col-lg-offset-3 col-sm-offset-3">

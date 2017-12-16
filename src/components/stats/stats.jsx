@@ -18,52 +18,12 @@ class Stats extends Component {
 		this.calculateTotalPointsFor = this.calculateTotalPointsFor.bind(this);
 		this.calculateTotalPointsAgainst = this.calculateTotalPointsAgainst.bind(this);
 		this.calculateTotalWins = this.calculateTotalWins.bind(this);
-		this.refreshScores = this.refreshScores.bind(this);
 	}
 
 	componentDidMount() {
-		this._getPlayers();
-		this._getScores().then(() => {
+		if (this.props.users && this.props.users.length && this.props.scores && this.props.scores.length) {
 			this.calculateStats();
-		});
-	}
-
-	refreshScores() {
-		this.setState({
-			massStats: [],
-			players: [],
-			scores: []
-		});
-		this._getPlayers();
-		this._getScores().then(() => {
-			this.calculateStats();
-		});
-	}
-
-	_getScores() {
-		return fetch(this.state.proxyUrl + this.state.baseUrl + "/v1/scores")
-		.then((response) => response.json())
-		.then((responseJson) => {
-			this.setState({
-			scores: responseJson.scores
-			});
-		})
-		.catch((error) => {
-			console.error(error);
-		});
-	}
-	  
-	_getPlayers() {
-		return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/users')
-		.then((response) => response.json())
-		.then((responseJson) => {
-			this.setState({
-			players: responseJson.users,
-			});
-		})
-		.catch((error) => {
-			console.error(error);
-		});
+		}
 	}
 
 	calculateWinPercentage(player) {
@@ -131,7 +91,7 @@ class Stats extends Component {
 
 	calculateTotalWins(player) {
 		let totalWins = 0;
-		let playerScores = this.state.scores.filter((score) => {
+		let playerScores = this.props.scores.filter((score) => {
 			return ((score.p1_name === player && score.p1_score === 10) || (score.p2_name === player && score.p2_score === 10))
 		});
 		totalWins = playerScores.length;
@@ -139,14 +99,14 @@ class Stats extends Component {
 	}
 
 	getPlayerGames(player) {
-		return this.state.scores.filter((game) => {
+		return this.props.scores.filter((game) => {
 			return game.p1_name === player || game.p2_name === player;
 		});
 	}
 
 	calculateStats() {
 		let stats = this.state.massStats;
-		this.state.players.forEach((player) => {
+		this.props.users.forEach((player) => {
 			player.name = player.first_name + " " + player.last_name;
 			stats.push({
 				name: player.name,
@@ -174,7 +134,7 @@ class Stats extends Component {
 					<td>{ stat.games.length }</td>
 					<td>{ stat.pointsFor }</td>
 					<td>{ stat.pointsAgainst }</td>
-					<td>{ stat.loseBy }</td>
+					<td>{ stat.loseBy > 0 ? stat.loseBy : 'N/A' }</td>
 				</tr>
 			)
 		});
@@ -183,9 +143,6 @@ class Stats extends Component {
 	render() {
 		return (
 		<div>
-			<div>
-				<button className="btn btn-small btn-primary" onClick={ this.refreshScores }>Refresh Stats</button>
-			</div>
 			<table className="table table-striped table-hover text-center">
 				<thead>
 					<tr>

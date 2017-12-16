@@ -3,48 +3,21 @@ import React, { Component } from 'react';
 class AddScore extends Component {
   constructor(props) {
     super(props);
-    // let baseUrl = "https://superior-foos-api.herokuapp.com";
-    // let proxyUrl = "https://floating-bayou-91674.herokuapp.com/";
-    let baseUrl = process.env.REACT_APP_BASE_URL;
-    let proxyUrl = process.env.REACT_APP_PROXY_URL;
-    console.log(baseUrl);
-
     this.state = {
-      users: [],
       newScore: {
         p1_id: 0,
         p2_id: 0,
         p1_score: 0,
         p2_score: 0,
         win_by_amount: 0,
-      },
-      scores: [],
-      baseUrl: baseUrl,
-      proxyUrl: proxyUrl,
+      }
     }
     this._handleScoreSubmit = this._handleScoreSubmit.bind(this);
-    this._getScores = this._getScores.bind(this);
   }
 
-  componentDidMount() {
-    this._getUsers();
-  }
-
-  _getUsers() {
-    return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/users')
-      .then((response) => response.json())
-      .then((responseJson) => {
-        this.setState({
-          users: responseJson.users,
-        });
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
 
   _renderUsers() {
-    return this.state.users.map((user) => {
+    return this.props.users.map((user) => {
       return (
         <option value={ user.id } key={ user.first_name + user.id }>{ user.first_name } { user.last_name }</option>
       )
@@ -80,21 +53,14 @@ class AddScore extends Component {
       }
     }
 
-    return fetch(this.state.proxyUrl + this.state.baseUrl + '/v1/scores/add', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newScore)
-    })
-    .then((response) => {
-      document.getElementById("score_form").reset();
-    })
+    return this.props.addScore(newScore)
+      .then(() => {
+        document.getElementById("score_form").reset();
+      });
   }
 
   _renderScores() {
-    return this.state.scores.map((score) => {
+    return this.props.scores.map((score) => {
       return (
         <tr key={ score.p1_name + score.id }>
           <td>{ score.p1_name }</td>
@@ -104,30 +70,6 @@ class AddScore extends Component {
         </tr>
       )
     });
-  }
-
-  _getScores(event) {
-    event.preventDefault()
-    return fetch(this.state.proxyUrl + this.state.baseUrl + "/v1/scores", {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(this.state.comparePlayers)})
-    .then((response) => response.json())
-    .then((responseJson) => {
-      if (responseJson.scores.length) {
-        this.setState({
-          scores: responseJson.scores
-        });
-      } else {
-        return <h1>{ responseJson.message }</h1>
-      }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
   }
 
   render() {

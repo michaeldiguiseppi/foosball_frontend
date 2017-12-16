@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import HomePage from './components/home_page/home_page';
+import HomePageContainer from './containers/homePageContainer';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <HomePage />
+        <HomePageContainer />
       </div>
     );
   }
