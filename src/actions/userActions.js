@@ -1,7 +1,7 @@
 import { UserTypes } from './actionTypes';
 
 function baseUrl() {
-	return process.env.REACT_APP_BASE_URL || 'localhost:9002/v1';
+	return process.env.REACT_APP_PROXY_URL + process.env.REACT_APP_BASE_URL;
 }
 
 export function addUser(userToAdd) {
