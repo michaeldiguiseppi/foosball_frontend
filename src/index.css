@@ -12,3 +12,8 @@ select,
 option {
     text-align: center;
 }
+
+.pad-top {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}

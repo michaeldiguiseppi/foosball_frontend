@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Statistics from './statistics';
+import { formatGameType } from '../../../utils/formatGameType';
 
 class Matchups extends Component {
   constructor(props) {
@@ -26,38 +27,6 @@ class Matchups extends Component {
       )
     });
   }
-
-  _handleScoreSubmit(event) {
-    event.preventDefault();
-
-    let newScore = {
-        p1_id: this.refs.p1_id.value,
-        p2_id: this.refs.p2_id.value,
-        p1_score: this.refs.p1_score.value,
-        p2_score: this.refs.p2_score.value,
-    }
-
-    if (!newScore.win_by_amount && (newScore.p1_score && newScore.p2_score)) {
-      let p1_score = newScore.p1_score;
-      let p2_score = newScore.p2_score;
-      let win_by_amount;
-      if (p1_score > p2_score) {
-        win_by_amount = p1_score - p2_score;
-        newScore = {
-            ...newScore,
-            win_by_amount,
-        }
-      } else {
-        win_by_amount = p2_score - p1_score;
-        newScore = {
-            ...newScore,
-            win_by_amount,
-        }
-      }
-    }
-
-    return this.props.addScore(newScore);
-  }
   
   handleCompareChange(event) {
     const target = event.target;
@@ -81,6 +50,7 @@ class Matchups extends Component {
 					<td>{ score.p1_score }</td>
 					<td>{ score.p2_score }</td>
 					<td>{ score.p2_name }</td>
+          <td>{ formatGameType(score.game_type) }</td>
 				</tr>
 			)
 			});
@@ -91,6 +61,7 @@ class Matchups extends Component {
 			  <td>No Scores Available</td>
 			  <td>No Scores Available</td>
 			  <td></td>
+        <td></td>
 		  </tr>
 		  )
 	  }
@@ -156,6 +127,7 @@ class Matchups extends Component {
               <th className="text-center">Player 1 Score</th>
               <th className="text-center">Player 2 Score</th>
               <th className="text-center">Player 2 Name</th>
+              <th className="text-center">Game Type</th>
             </tr>
           </thead>
           <tbody>

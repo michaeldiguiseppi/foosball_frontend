@@ -6,9 +6,9 @@ import React, { Component } from 'react';
 import ScoreList from '../components/score_list/score_list';
 
 
-class ScoreListContainer extends Component {    
+class PingPongScoreList extends Component {    
 	componentWillMount() {
-		this.props.scoreActions.fetchScores();
+		this.props.scoreActions.fetchScores('pingpong');
 	}
 
 	render() {
@@ -23,7 +23,7 @@ class ScoreListContainer extends Component {
 	}
 }
 
-ScoreListContainer.propTypes = {
+PingPongScoreList.propTypes = {
   scoreActions: PropTypes.object,
   scores: PropTypes.array
 };
@@ -43,4 +43,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(ScoreListContainer);
+)(PingPongScoreList);

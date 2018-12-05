@@ -12,6 +12,7 @@ class ScoreList extends Component {
             <td>{ score.p1_score }</td>
             <td>{ score.p2_score }</td>
             <td>{ score.p2_name }</td>
+            <td>{ this.formatGameType(score.game_type) }</td>
           </tr>
         )
       });
@@ -27,6 +28,16 @@ class ScoreList extends Component {
     }
   }
 
+  formatGameType = (game_type) => {
+    if (game_type === 'pingpong') {
+      return 'Ping Pong';
+    } else if (game_type === 'foosball') {
+      return 'Foosball';
+    } else {
+      return 'Not Specified';
+    }
+  } 
+
   render() {
     return (
       <div className="ScoreList container">
@@ -41,6 +52,7 @@ class ScoreList extends Component {
               <th className="text-center">Player 1 Score</th>
               <th className="text-center">Player 2 Score</th>
               <th className="text-center">Player 2 Name</th>
+              <th className="text-center">Game Type</th>
             </tr>
           </thead>
           <tbody>

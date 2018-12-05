@@ -11,7 +11,6 @@ import HomePage from '../components/home_page/home_page';
 class HomePageContainer extends Component {    
 	componentWillMount() {
 		this.props.userActions.fetchUsers();
-		this.props.scoreActions.fetchScores();
 	}
 
 	render() {

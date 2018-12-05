@@ -17,7 +17,7 @@ class StatsContainer extends Component {
 	render() {
 		return (
 		<div className="">
-			{this.props.users.length > 0 && this.props.scores.length > 0 ?
+			{this.props.users && this.props.users.length > 0 && this.props.scores && this.props.scores.length > 0 ?
 				<Stats
 					users={this.props.users}
 					scores={this.props.scores}

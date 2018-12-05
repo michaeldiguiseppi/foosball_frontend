@@ -39,7 +39,7 @@ export function addScores(scoreToAdd) {
 		.then((response) => {
 			return response.json();
 		})
-		.then(json => dispatch(fetchScores()));
+		.then(json => dispatch(fetchScores(scoreToAdd.game_type)));
 	}
 }
 
@@ -47,9 +47,16 @@ export function receiveScores(json) {
 	return { type: ScoreTypes.RECEIVE_SCORES, scores: json.scores };
 }
 
-export function fetchScores() {
+export function fetchScores(game_type) {
 	return dispatch => {
-		return fetch(baseUrl() + '/scores', {
+		let url = '';
+		console.log(game_type !== undefined)
+		if (game_type !== undefined) {
+			url = `${baseUrl()}/scores/${game_type}`;
+		} else {
+			url = `${baseUrl()}/scores`;
+		}
+		return fetch(url, {
 			method: 'GET',
 			headers: {
 				'Accept': 'application/json'

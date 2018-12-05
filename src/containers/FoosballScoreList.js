@@ -6,9 +6,9 @@ import React, { Component } from 'react';
 import ScoreList from '../components/score_list/score_list';
 
 
-class ScoreListContainer extends Component {    
+class FoosballScoreList extends Component {    
 	componentWillMount() {
-		this.props.scoreActions.fetchScores();
+		this.props.scoreActions.fetchScores('foosball');
 	}
 
 	render() {
@@ -16,14 +16,14 @@ class ScoreListContainer extends Component {
 		<div className="">
 			{this.props.scores && this.props.scores.length > 0 ?
 				<ScoreList scores={this.props.scores} />
-				: <div className="text-center">No Games Found</div>
+				: <div></div>
 			}
 		</div>
 		);
 	}
 }
 
-ScoreListContainer.propTypes = {
+FoosballScoreList.propTypes = {
   scoreActions: PropTypes.object,
   scores: PropTypes.array
 };
@@ -43,4 +43,4 @@ function mapDispatchToProps(dispatch) {
 export default connect(
 	mapStateToProps,
 	mapDispatchToProps
-)(ScoreListContainer);
+)(FoosballScoreList);

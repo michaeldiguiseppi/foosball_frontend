@@ -10,6 +10,7 @@ class AddScore extends Component {
         p1_score: 0,
         p2_score: 0,
         win_by_amount: 0,
+        game_type: 'foosball'
       }
     }
     this._handleScoreSubmit = this._handleScoreSubmit.bind(this);
@@ -32,7 +33,10 @@ class AddScore extends Component {
         p2_id: this.refs.p2_id.value,
         p1_score: this.refs.p1_score.value,
         p2_score: this.refs.p2_score.value,
+        game_type: this.refs.game_type.value,
     }
+
+    console.warn('newScore: ', newScore);
 
     if (!newScore.win_by_amount && (newScore.p1_score && newScore.p2_score)) {
       let p1_score = newScore.p1_score;
@@ -67,6 +71,7 @@ class AddScore extends Component {
           <td>{ score.p1_score }</td>
           <td>{ score.p2_score }</td>
           <td>{ score.p2_name }</td>
+          <td>{ score.game_type }</td>
         </tr>
       )
     });
@@ -77,28 +82,37 @@ class AddScore extends Component {
       <div className="container">
         <h3>Add Scores</h3>
         <hr />
-        <form className="form-horizontal" id="score_form" onSubmit={ this._handleScoreSubmit }>
+        <form id="score_form" onSubmit={ this._handleScoreSubmit }>
           <fieldset>
             <div className="form-group">
-              <div className="col-lg-3 col-sm-3">
+              <div className="col-lg-4 col-sm-4">
                 <select className="form-control text-center" id="select" name="p1_id" ref="p1_id">
                   <option value="0" className="text-center"> -- Select Player 1 -- </option>
                   { this._renderUsers() }
                 </select>
               </div>
-              <div className="col-lg-3 col-sm-3">
+              <div className="col-lg-2 col-sm-2">
                 <input type="number" pattern="[0-9]*" className="form-control text-center" name="p1_score" placeholder="Player 1 Score" ref="p1_score" autoComplete="off"/>
               </div>
-              <div className="col-lg-3 col-sm-3">
+              <div className="col-lg-2 col-sm-2">
                 <input type="number" pattern="[0-9]*" className="form-control text-center" name="p2_score" placeholder="Player 2 Score" ref="p2_score" autoComplete="off"/>
               </div>
-              <div className="col-lg-3 col-sm-3">
+              <div className="col-lg-4 col-sm-4">
                 <select className="form-control text-center" id="select" name="p2_id" ref="p2_id">
                   <option value="0" className="text-center"> -- Select Player 2 -- </option>
                   { this._renderUsers() }
                 </select>
               </div>
-            </div>
+              <div className="form-group">
+                <div className="col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4 pad-top">
+                    <select className="form-control text-center" id="select" name="game_type" ref="game_type">
+                      <option value="0" className="text-center"> -- Select Game Type -- </option>
+                      <option value="foosball" className="text-center">Foosball</option>
+                      <option value="pingpong" className="text-center">Ping Pong</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
             <div className="form-group">
               <div className="col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4">
                 <button type="reset" className="btn btn-default">Cancel</button>
