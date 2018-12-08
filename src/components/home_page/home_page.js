@@ -8,14 +8,15 @@ class HomePage extends Component {
       <div className="container">
         <AddScore 
           users={ this.props.users } 
-          addScore={ this.props.addScore }
+          scoreActions={ this.props.scoreActions }
+          userActions={ this.props.userActions }
           />
         <hr />
         <Matchups 
           users={ this.props.users }
-          getScoresByPlayers={ this.props.getScoresByPlayers }
           scores_by_players={ this.props.scores_by_players }
-          addScore={ this.props.addScore }
+          scoreActions={ this.props.scoreActions }
+          userActions={ this.props.userActions }
         />
       </div>
     );

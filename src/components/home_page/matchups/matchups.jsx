@@ -15,20 +15,24 @@ class Matchups extends Component {
 	  scores: [],
 	  message: {},
     }
-    this.handleCompareChange = this.handleCompareChange.bind(this);
-	  this._getScores = this._getScores.bind(this);
-	  this._resetScores = this._resetScores.bind(this);
   }
 
-  _renderUsers() {
-    return this.props.users.map((user) => {
-      return (
-        <option value={ user.id } key={ user.first_name + user.id }>{ user.first_name } { user.last_name }</option>
-      )
-    });
+  componentWillMount() {
+    console.warn(this.props);
+    this.props.userActions.fetchUsers();
+  }
+
+  _renderUsers = () => {
+    if (this.props.users && this.props.users.length) {
+      return this.props.users.map((user) => {
+        return (
+          <option value={ user.id } key={ user.first_name + user.id }>{ user.first_name } { user.last_name }</option>
+        )
+      });
+    }
   }
   
-  handleCompareChange(event) {
+  handleCompareChange = (event) => {
     const target = event.target;
     const value = target.value;
     const name = target.name;
@@ -41,18 +45,18 @@ class Matchups extends Component {
     });
   }
 
-  _renderScores() {
+  _renderScores = () => {
 	  if (this.props.scores_by_players && this.props.scores_by_players.length) {
-		return this.props.scores_by_players.map((score) => {
-			return (
-				<tr key={ score.p1_name + score.id }>
-					<td>{ score.p1_name }</td>
-					<td>{ score.p1_score }</td>
-					<td>{ score.p2_score }</td>
-					<td>{ score.p2_name }</td>
-          <td>{ formatGameType(score.game_type) }</td>
-				</tr>
-			)
+      return this.props.scores_by_players.map((score) => {
+        return (
+          <tr key={ score.p1_name + score.id }>
+            <td>{ score.p1_name }</td>
+            <td>{ score.p1_score }</td>
+            <td>{ score.p2_score }</td>
+            <td>{ score.p2_name }</td>
+            <td>{ formatGameType(score.game_type) }</td>
+          </tr>
+        )
 			});
 	  } else {
 		  return (
@@ -67,15 +71,15 @@ class Matchups extends Component {
 	  }
   }
 
-  _getScores(event) {
+  _getScores = (event) => {
 	  event.preventDefault()
     if (this.state.comparePlayers.p1_id === 0 || this.state.comparePlayers.p2_id === 0) {
       return;
     }
-    return this.props.getScoresByPlayers(this.state.comparePlayers);
+    return this.props.scoreActions.getScoresByPlayers(this.state.comparePlayers);
   }
 
-  _resetScores() {
+  _resetScores = () => {
 	this.setState({
 			comparePlayers: {
 				p1_id: 0,
@@ -102,6 +106,15 @@ class Matchups extends Component {
                 <select className="form-control text-center" id="select" required name="p2_id" value={ this.state.comparePlayers.p2_id } onChange={ this.handleCompareChange }>
                   <option value="0"> -- Select a Player -- </option>
                   { this._renderUsers() }
+                </select>
+              </div>
+            </div>
+            <div className="form-group">
+              <div className="col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4 pad-top">
+                <select className="form-control text-center" id="select" name="game_type" ref="game_type">
+                  <option value="0" className="text-center"> -- Select Game Type -- </option>
+                  <option value="foosball" className="text-center">Foosball</option>
+                  <option value="pingpong" className="text-center">Ping Pong</option>
                 </select>
               </div>
             </div>

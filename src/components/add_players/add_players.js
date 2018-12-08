@@ -8,15 +8,17 @@ class AddPlayers extends Component {
   }
 
   _renderPlayers() {
-	return this.props.users.map((player) => {
-		return (
-		  <tr key={ player.first_name + player.id }>
-        <td>{ player.first_name }</td>
-        <td>{ player.last_name }</td>
-        <td>{ player.is_admin ? "Yes" : "No" }</td>
-		  </tr>
-		)
-	  });
+    if (this.props.users && this.props.users.length) {
+      return this.props.users.map((player) => {
+        return (
+          <tr key={ player.first_name + player.id }>
+            <td>{ player.first_name }</td>
+            <td>{ player.last_name }</td>
+            <td>{ player.is_admin ? "Yes" : "No" }</td>
+          </tr>
+        )
+      });
+    }
   }
 
   _handleSubmit(event) {

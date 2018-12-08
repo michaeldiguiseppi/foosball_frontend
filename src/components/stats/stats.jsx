@@ -7,28 +7,23 @@ class Stats extends Component {
 		let proxyUrl = process.env.REACT_APP_PROXY_URL;
 		this.state = {
 			players: [],
-			scores: [],
 			baseUrl: baseUrl,
 			proxyUrl: proxyUrl,
-			massStats: []
+			massStats: [],
+			game_type: 'pingpong',
 		}
-		this.calculateStats = this.calculateStats.bind(this);
-		this.calculateWinPercentage = this.calculateWinPercentage.bind(this);
-		this.calculateLoseBy = this.calculateLoseBy.bind(this);
-		this.calculateTotalPointsFor = this.calculateTotalPointsFor.bind(this);
-		this.calculateTotalPointsAgainst = this.calculateTotalPointsAgainst.bind(this);
-		this.calculateTotalWins = this.calculateTotalWins.bind(this);
 	}
 
 	componentDidMount() {
-		if (this.props.users && this.props.users.length && this.props.scores && this.props.scores.length) {
-			this.calculateStats();
-		}
+		const { scoreActions, userActions } = this.props;
+		const { fetchScores } = scoreActions;
+		const { fetchUsers } = userActions;
+		fetchScores().then(() => fetchUsers().then(() => this.calculateStats()));
 	}
 
-	calculateWinPercentage(player) {
+	calculateWinPercentage = (player) => {
 		let winPercent = 0;
-		let playerGames = this.getPlayerGames(player);
+		let playerGames = this.getPlayerGames(player, this.state.game_type);
 		let totalWins = this.calculateTotalWins(player);
 		if (playerGames.length === 0) {
 			winPercent = 0;
@@ -38,13 +33,13 @@ class Stats extends Component {
 		return winPercent.toFixed(1);
 	}
 
-	calculateLoseBy(player) {
+	calculateLoseBy = (player) => {
 		let loseBy = 0;
-		let playerGames = this.getPlayerGames(player);
+		let playerGames = this.getPlayerGames(player, this.state.game_type);
 		playerGames.forEach((game) => {
-			if (game.p1_name === player && game.p1_score !== 10) {
+			if (game.p1_name === player && (game.p1_score < game.p2_score)) {
 				loseBy += game.p1_score;
-			} else if (game.p2_name === player && game.p2_score !== 10) {
+			} else if (game.p2_name === player && (game.p2_score < game.p1_score)) {
 				loseBy += game.p2_score;
 			}
 		});
@@ -59,9 +54,9 @@ class Stats extends Component {
 		return loseBy;
 	}
 
-	calculateTotalPointsFor(player) {
+	calculateTotalPointsFor = (player) => {
 		let pointsFor = 0;
-		let playerGames = this.getPlayerGames(player);
+		let playerGames = this.getPlayerGames(player, this.state.game_type);
 
 		playerGames.forEach((game) => {
 			if (game.p1_name === player) {
@@ -74,9 +69,9 @@ class Stats extends Component {
 		return pointsFor;
 	}
 
-	calculateTotalPointsAgainst(player) {
+	calculateTotalPointsAgainst = (player) => {
 		let pointsAgainst = 0;
-		let playerGames = this.getPlayerGames(player);
+		let playerGames = this.getPlayerGames(player, this.state.game_type);
 
 		playerGames.forEach((game) => {
 			if (game.p1_name !== player) {
@@ -89,25 +84,26 @@ class Stats extends Component {
 		return pointsAgainst;
 	}
 
-	calculateTotalWins(player) {
+	calculateTotalWins = (player) => {
+		const { game_type } = this.state;
 		let totalWins = 0;
-		let playerScores = this.props.scores.filter((score) => {
+		let playerScores = this.props.scores[game_type].filter((score) => {
 			return ((score.p1_name === player && score.p1_score === 10) || (score.p2_name === player && score.p2_score === 10))
 		});
 		totalWins = playerScores.length;
 		return totalWins;
 	}
 
-	getPlayerGames(player) {
-		return this.props.scores.filter((game) => {
+	getPlayerGames = (player, game_type) => {
+		return this.props.scores[game_type].filter((game) => {
 			return game.p1_name === player || game.p2_name === player;
 		});
 	}
 
-	calculateStats() {
-		let stats = this.state.massStats;
+	calculateStats = () => {
+		let stats = [];
 		this.props.users.forEach((player) => {
-			player.name = player.first_name + " " + player.last_name;
+			player.name = `${player.first_name} ${player.last_name}`;
 			stats.push({
 				name: player.name,
 				totalWins: this.calculateTotalWins(player.name),
@@ -115,34 +111,57 @@ class Stats extends Component {
 				loseBy: this.calculateLoseBy(player.name),
 				pointsFor: this.calculateTotalPointsFor(player.name),
 				pointsAgainst: this.calculateTotalPointsAgainst(player.name),
-				games: this.getPlayerGames(player.name),
+				games: this.getPlayerGames(player.name, this.state.game_type),
 			});
 		});
 
-		this.setState({
+		return this.setState({
 			massStats: stats
 		});
 	}
 
-	renderStats() {
-		return this.state.massStats.map((stat) => {
-			return (
-				<tr key={ stat.name + stat.winPercentage }>
-					<td>{ stat.name }</td>
-					<td>{ stat.winPercentage }%</td>
-					<td>{ stat.totalWins }</td>
-					<td>{ stat.games.length }</td>
-					<td>{ stat.pointsFor }</td>
-					<td>{ stat.pointsAgainst }</td>
-					<td>{ stat.loseBy > 0 ? stat.loseBy : 'N/A' }</td>
-				</tr>
-			)
+	renderStats = () => {
+		if (this.state.massStats && this.state.massStats.length) {
+			return this.state.massStats.map((stat) => {
+				if (stat.games.length > 0) {
+					return (
+						<tr key={ stat.name + stat.winPercentage }>
+							<td>{ stat.name }</td>
+							<td>{ stat.winPercentage }%</td>
+							<td>{ stat.totalWins }</td>
+							<td>{ stat.games.length }</td>
+							<td>{ stat.pointsFor }</td>
+							<td>{ stat.pointsAgainst }</td>
+							<td>{ stat.loseBy > 0 ? stat.loseBy : 'N/A' }</td>
+						</tr>
+					)
+				}
+				return null;
+			});
+		}
+	}
+
+	_changeDisplayOption = () => {
+		this.setState({
+			game_type: this.refs.game_type.value
 		});
+		this.calculateStats();
 	}
 
 	render() {
+		console.warn(this.state);
 		return (
 		<div>
+			<form onChange={() => { this._changeDisplayOption() } }>
+				<div className="form-group">
+					<div className="col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4 pad-top">
+						<select className="form-control text-center" id="select" name="game_type" ref="game_type" defaultValue="pingpong">
+							<option value="pingpong" className="text-center">Ping Pong</option>
+							<option value="foosball" className="text-center">Foosball</option>
+						</select>
+					</div>
+				</div>
+			</form>
 			<table className="table table-striped table-hover text-center">
 				<thead>
 					<tr>

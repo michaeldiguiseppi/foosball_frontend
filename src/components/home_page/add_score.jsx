@@ -16,13 +16,20 @@ class AddScore extends Component {
     this._handleScoreSubmit = this._handleScoreSubmit.bind(this);
   }
 
+  componentWillMount() {
+    console.warn(this.props.userActions);
+    this.props.userActions.fetchUsers();
+  }
+
 
   _renderUsers() {
-    return this.props.users.map((user) => {
-      return (
-        <option value={ user.id } key={ user.first_name + user.id }>{ user.first_name } { user.last_name }</option>
-      )
-    });
+    if (this.props.users && this.props.users.length) {
+      return this.props.users.map((user) => {
+        return (
+          <option value={ user.id } key={ user.first_name + user.id }>{ user.first_name } { user.last_name }</option>
+        )
+      });
+    }
   }
 
   _handleScoreSubmit(event) {
@@ -35,8 +42,6 @@ class AddScore extends Component {
         p2_score: this.refs.p2_score.value,
         game_type: this.refs.game_type.value,
     }
-
-    console.warn('newScore: ', newScore);
 
     if (!newScore.win_by_amount && (newScore.p1_score && newScore.p2_score)) {
       let p1_score = newScore.p1_score;
@@ -61,20 +66,6 @@ class AddScore extends Component {
       .then(() => {
         document.getElementById("score_form").reset();
       });
-  }
-
-  _renderScores() {
-    return this.props.scores.map((score) => {
-      return (
-        <tr key={ score.p1_name + score.id }>
-          <td>{ score.p1_name }</td>
-          <td>{ score.p1_score }</td>
-          <td>{ score.p2_score }</td>
-          <td>{ score.p2_name }</td>
-          <td>{ score.game_type }</td>
-        </tr>
-      )
-    });
   }
 
   render() {

@@ -20,7 +20,7 @@ class Statistics extends Component {
 			p2_scores;
 		// Get p1_win games
 		p1_scores = scores.filter((score) => {
-			return (score.p1_name === playerOne && score.p1_score === 10) || (score.p2_name === playerOne && score.p2_score === 10);
+			return (score.p1_name === playerOne && score.p1_score > score.p2_score) || (score.p2_name === playerOne && score.p2_score > score.p1_score);
 		});
 		// calculate p1 win percentage
 		p1_win_percent = (p1_scores.length / scores.length * 100).toFixed(2);
@@ -28,7 +28,7 @@ class Statistics extends Component {
 		p1_total_wins = p1_scores.length;
 		// get p2_win games
 		p2_scores = scores.filter((score) => {
-			return (score.p1_name === playerTwo && score.p1_score === 10) || (score.p2_name === playerTwo && score.p2_score === 10);
+			return (score.p1_name === playerTwo && score.p1_score > score.p2_score) || (score.p2_name === playerTwo && score.p2_score > score.p1_score);
 		});
 		// calculate p2 win percentage
 		p2_win_percent = (p2_scores.length / scores.length * 100).toFixed(2);

@@ -7,6 +7,7 @@ function baseUrl() {
 
 export function getScoresByPlayers(players) {
 	return dispatch => {
+		dispatch({ type: ScoreTypes.FETCH_SCORES_BY_PLAYERS });
 		return fetch(baseUrl() + '/scores', {
 			method: 'POST',
 			headers: {
@@ -49,8 +50,8 @@ export function receiveScores(json) {
 
 export function fetchScores(game_type) {
 	return dispatch => {
+		dispatch({ type: ScoreTypes.FETCH_SCORES });
 		let url = '';
-		console.log(game_type !== undefined)
 		if (game_type !== undefined) {
 			url = `${baseUrl()}/scores/${game_type}`;
 		} else {
