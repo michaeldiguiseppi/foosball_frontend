@@ -20,7 +20,7 @@ class Matchups extends Component {
     }
   }
 
-  _renderScores = () => {
+  _getPlayerGames = () => {
     const { game_type } = this.refs;
     const { users } = this.props; 
     // player 1
@@ -37,30 +37,35 @@ class Matchups extends Component {
         return this.props[game_type.value]
         .filter((game) => { 
           return (game.p1_name === p1_name && game.p2_name === p2_name) || (game.p2_name === p1_name && game.p1_name === p2_name);
-         })
-         .map((score) => {
-          return (
-            <tr key={ score.p1_name + score.id }>
-              <td>{ score.p1_name }</td>
-              <td>{ score.p1_score }</td>
-              <td>{ score.p2_score }</td>
-              <td>{ score.p2_name }</td>
-              <td>{ formatGameType(score.game_type) }</td>
-            </tr>
-          )
-        });
-      } 
-    } else {
-      return (
-        <tr>
-          <td></td>
-          <td>No Scores Available</td>
-          <td>No Scores Available</td>
-          <td></td>
-          <td></td>
-        </tr>
-      )
+         });
+        }
+      }
+  }
+
+  _renderScores = () => {
+    const games = this._getPlayerGames();
+    if (games && games.length) {
+      return games.map((score) => {
+        return (
+          <tr key={ score.p1_name + score.id }>
+            <td>{ score.p1_name }</td>
+            <td>{ score.p1_score }</td>
+            <td>{ score.p2_score }</td>
+            <td>{ score.p2_name }</td>
+            <td>{ formatGameType(score.game_type) }</td>
+          </tr>
+        )
+      });
     }
+    return (
+      <tr>
+        <td></td>
+        <td>No Scores Available</td>
+        <td>No Scores Available</td>
+        <td></td>
+        <td></td>
+      </tr>
+    )
   }
 
   _getScores = (event) => {
@@ -72,6 +77,7 @@ class Matchups extends Component {
   }
 
   render() {
+    const games = this._getPlayerGames();
     return (
       <div className="container">
         <h3>Matchup Stats</h3>
@@ -109,11 +115,11 @@ class Matchups extends Component {
           </fieldset>
         </form>
         <hr />
-		{ this.props.scores_by_players && this.props.scores_by_players.length ? 
+		{ games && games.length ? 
       <Statistics 
-        scores={ this.props.scores_by_players }
-        playerOne={ this.props.scores_by_players[0].p1_name || "" }
-        playerTwo={ this.props.scores_by_players[0].p2_name || "" }
+        scores={ games }
+        playerOne={ games[0].p1_name || "" }
+        playerTwo={ games[0].p2_name || "" }
       /> : <div>No Statistics Available</div> 
     }
 		<hr />
