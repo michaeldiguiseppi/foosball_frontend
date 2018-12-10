@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
 
 class ScoreList extends Component {
+  componentDidMount() {
+    const { scoreActions } = this.props;
+    const { fetchScores } = scoreActions;
+    fetchScores();
+  }
+
   _renderScores() {
     if (this.props.scores && this.props.scores.length) {
       let game_number = 0;

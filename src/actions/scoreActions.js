@@ -5,6 +5,10 @@ function baseUrl() {
 	return process.env.REACT_APP_PROXY_URL + process.env.REACT_APP_BASE_URL;
 }
 
+export function setGameType(game_type) {
+	return { type: ScoreTypes.SET_GAME_TYPE, game_type };
+}
+
 export function getScoresByPlayers(players) {
 	return dispatch => {
 		dispatch({ type: ScoreTypes.FETCH_SCORES_BY_PLAYERS });
@@ -27,7 +31,7 @@ export function receiveScoresByPlayer(json) {
 	return { type: ScoreTypes.RECEIVE_SCORES_BY_PLAYERS, scores_by_players: json.scores };
 }
 
-export function addScores(scoreToAdd) {
+export function addScore(scoreToAdd) {
 	return dispatch => {
 		return fetch(baseUrl() + '/scores/add', {
 			method: 'POST',

@@ -1,28 +1,12 @@
 import React, { Component } from 'react';
 
 class AddScore extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      newScore: {
-        p1_id: 0,
-        p2_id: 0,
-        p1_score: 0,
-        p2_score: 0,
-        win_by_amount: 0,
-        game_type: 'foosball'
-      }
-    }
-    this._handleScoreSubmit = this._handleScoreSubmit.bind(this);
-  }
-
   componentWillMount() {
-    console.warn(this.props.userActions);
-    this.props.userActions.fetchUsers();
+    this.props.fetchUsers();
   }
 
 
-  _renderUsers() {
+  _renderUsers = () => {
     if (this.props.users && this.props.users.length) {
       return this.props.users.map((user) => {
         return (
@@ -32,7 +16,7 @@ class AddScore extends Component {
     }
   }
 
-  _handleScoreSubmit(event) {
+  _handleScoreSubmit = (event) => {
     event.preventDefault();
 
     let newScore = {
@@ -96,8 +80,7 @@ class AddScore extends Component {
               </div>
               <div className="form-group">
                 <div className="col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4 pad-top">
-                    <select className="form-control text-center" id="select" name="game_type" ref="game_type">
-                      <option value="0" className="text-center"> -- Select Game Type -- </option>
+                    <select className="form-control text-center" id="select" name="game_type" ref="game_type" defaultValue="pingpong">
                       <option value="foosball" className="text-center">Foosball</option>
                       <option value="pingpong" className="text-center">Ping Pong</option>
                     </select>

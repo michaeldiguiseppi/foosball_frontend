@@ -7,8 +7,10 @@ import App from './App';
 import ScoreListContainer from './containers/scoreListContainer';
 import FoosballScoreList from './containers/FoosballScoreList';
 import PingPongScoreList from './containers/PingPongScoreList';
-import AddPlayerContainer from './containers/addPlayerContainer';
-import StatsContainer from './containers/statsContainer';
+// import AddPlayerContainer from './containers/addPlayerContainer';
+// import StatsContainer from './containers/statsContainer';
+import Stats from './components/stats/stats';
+import AddPlayers from './components/add_players/add_players';
 import registerServiceWorker from './registerServiceWorker';
 import configureStore from './store/configureStore';
 
@@ -53,8 +55,8 @@ ReactDOM.render(
         <Route path="/scores/all" component={ScoreListContainer}/>
         <Route path="/scores/foosball" component={FoosballScoreList}/>
         <Route path="/scores/pingpong" component={PingPongScoreList}/>
-        <Route path="/players/add" component={AddPlayerContainer}/>
-        <Route path="/stats" component={StatsContainer}/>
+        <Route path="/players/add" component={AddPlayers}/>
+        <Route path="/stats" component={Stats}/>
       </div>
     </Router>
   </Provider>,

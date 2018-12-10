@@ -5,7 +5,7 @@ import ScoreList from '../components/score_list/score_list';
 
 function mapStateToProps(state) {
 	return {
-		scores: state.app.scores.filter(score => score.game_type === 'pingpong')
+		scores: state.app.scores && state.app.scores.pingpong,
 	};
 }
 

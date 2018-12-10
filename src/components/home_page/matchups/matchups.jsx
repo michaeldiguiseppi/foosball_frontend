@@ -11,6 +11,7 @@ class Matchups extends Component {
       comparePlayers: {
         p1_id: 0,
         p2_id: 0,
+        game_type: 'pingpong',
       },
 	  scores: [],
 	  message: {},
@@ -18,8 +19,7 @@ class Matchups extends Component {
   }
 
   componentWillMount() {
-    console.warn(this.props);
-    this.props.userActions.fetchUsers();
+    this.props.fetchUsers();
   }
 
   _renderUsers = () => {
@@ -89,6 +89,7 @@ class Matchups extends Component {
   }
 
   render() {
+    console.warn(this.props);
     return (
       <div className="container">
         <h3>Matchup Stats</h3>
@@ -111,8 +112,7 @@ class Matchups extends Component {
             </div>
             <div className="form-group">
               <div className="col-lg-4 col-lg-offset-4 col-sm-4 col-sm-offset-4 pad-top">
-                <select className="form-control text-center" id="select" name="game_type" ref="game_type">
-                  <option value="0" className="text-center"> -- Select Game Type -- </option>
+                <select className="form-control text-center" id="select" name="game_type" ref="game_type" defaultValue="pingpong">
                   <option value="foosball" className="text-center">Foosball</option>
                   <option value="pingpong" className="text-center">Ping Pong</option>
                 </select>
@@ -127,11 +127,13 @@ class Matchups extends Component {
           </fieldset>
         </form>
         <hr />
-		{ this.props.scores_by_players && this.props.scores_by_players.length ? <Statistics 
-			scores={ this.props.scores_by_players }
-			playerOne={ this.props.scores_by_players[0].p1_name || "" }
-			playerTwo={ this.props.scores_by_players[0].p2_name || "" }
-		/> : <div>No Statistics Available</div> }
+		{ this.props.scores_by_players && this.props.scores_by_players.length ? 
+      <Statistics 
+        scores={ this.props.scores_by_players }
+        playerOne={ this.props.scores_by_players[0].p1_name || "" }
+        playerTwo={ this.props.scores_by_players[0].p2_name || "" }
+      /> : <div>No Statistics Available</div> 
+    }
 		<hr />
         <table className="table table-striped table-hover text-center">
           <thead>

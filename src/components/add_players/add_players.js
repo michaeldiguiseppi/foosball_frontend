@@ -1,13 +1,16 @@
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import React, { Component } from 'react';
+import * as userActions from '../../actions/userActions';
 require('../../index.css');
 
 class AddPlayers extends Component {
-  constructor(props) {
-    super(props);
-    this._handleSubmit = this._handleSubmit.bind(this);
+  componentDidMount() {
+    const { userActions } = this.props;
+    userActions.fetchUsers();
   }
 
-  _renderPlayers() {
+  _renderPlayers = () => {
     if (this.props.users && this.props.users.length) {
       return this.props.users.map((player) => {
         return (
@@ -21,14 +24,14 @@ class AddPlayers extends Component {
     }
   }
 
-  _handleSubmit(event) {
+  _handleSubmit = (event) => {
     event.preventDefault();
     let newPlayer = {
         first_name: this.refs.first_name.value,
         last_name: this.refs.last_name.value,
         is_admin: this.refs.is_admin.checked,
     }
-    return this.props.addPlayer(newPlayer)
+    return this.props.userActions.addUser(newPlayer)
       .then((response) => {
         document.getElementById("player_form").reset();
     });
@@ -81,4 +84,19 @@ class AddPlayers extends Component {
   }
 }
 
-export default AddPlayers;
+const mapStateToProps = (state) => {
+	return {
+		users: state.app.users
+	};
+}
+
+const mapDispatchToProps = (dispatch) => {
+	return {
+		userActions: bindActionCreators(userActions, dispatch)
+	};
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(AddPlayers);
