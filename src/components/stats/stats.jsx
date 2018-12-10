@@ -15,11 +15,11 @@ export class Stats extends Component {
 		const { fetchUsers, fetchScores } = this.props;
 		fetchUsers();
 		fetchScores();
-		this.setState({ game_type: this.refs.game_type.value });
+		this._changeDisplayOption();
 	}
 
 	getPlayerGames = (player) => {
-		const game_type = this.refs.game_type.value;
+		const game_type = this.refs.game_type && this.refs.game_type.value;
 		return this.props[game_type] && this.props[game_type].length && this.props[game_type].filter((game) => {
 			return game.p1_name === player || game.p2_name === player;
 		});
@@ -91,7 +91,7 @@ export class Stats extends Component {
 	}
 
 	calculateTotalWins = (player) => {
-		const game_type = this.refs.game_type.value;
+		const game_type = this.refs.game_type && this.refs.game_type.value;
 		let totalWins = 0;
 		if (this.props[game_type]) {
 			let playerScores = this.props[game_type] && this.props[game_type].filter((score) => {
