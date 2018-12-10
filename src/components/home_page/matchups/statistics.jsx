@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 
 class Statistics extends Component {
-	constructor(props) {
-		super(props);
-		this.calculateStats = this.calculateStats.bind(this);
-	}
-
-	calculateStats() {
+	calculateStats = () => {
 		let { scores, playerOne, playerTwo } = this.props;
 		let p1_total_points = 0, 
 			p1_win_percent,
